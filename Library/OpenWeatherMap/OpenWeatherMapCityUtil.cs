@@ -17,7 +17,8 @@ namespace OpenWeatherMap
         public static IEnumerable<string> GetCitys(string country) => File.ReadLines(JsonFileName)
             .Where(l => l.Contains($"\"country\":\"{country}\""))
             .Select(line => (OpenWeatherMapJson.City)DynamicJson.Parse(line))
-            .Select(json => json.name);
+            .Select(json => json.name)
+            .OrderBy(x => x);
 
         public static string GetCurrentCountry() => GetOsLocale().Substring(3);
 

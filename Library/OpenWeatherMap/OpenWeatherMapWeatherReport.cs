@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,23 +11,33 @@ namespace OpenWeatherMap
 {
     public class OpenWeatherMapWeatherReport : IWeatherReport
     {
+        private const string OpenWeatherMapUrl = "http://api.openweathermap.org/data/2.5/forecast";
         private const string AppId = "3d9a8eaf26eb211844ea28e7535c8894";
-
-        public OpenWeatherMapWeatherReport(string url)
-        {
-            Url = url;
-        }
-
-        public string Url { get; }
         public WeatherReportData ReportData { get; } = new WeatherReportData();
 
-        public bool GetUmbrella(DateTime day) => ReportData.WeatherDatas.Where(x => x.Date >= day && x.Date <= day.AddDays(1)).Any(x => x.Weather.Contains("RAIN"));
+        public string Url { get; }
+        public UmbrellaData GetUmbrella(DateTime day)
+        {
+            var days = TodayWeatherData();
+            var data = new UmbrellaData
+            {
+                Is = days.Any(x => x.Weather.Contains("RAIN")),
+                Percent = (int) ((float) days.Count(x => x.Weather.Contains("RAIN"))/days.Count*100)
+            };
+            return data;
+        }
+
+        public List<WeatherData> TodayWeatherData()
+        {
+            return ReportData.WeatherDatas.Where(x => x.Date >= DateTime.Now && x.Date <= DateTime.Now.AddDays(1)).ToList();
+        }
+
 
         public WeatherReportData Update(string place)
         {
             if (string.IsNullOrEmpty(place)) return null;
 
-            var accessUrl = $"{Url}?q={place}&appid={AppId}";
+            var accessUrl = $"{OpenWeatherMapUrl}?q={place}&appid={AppId}";
             using (var wc = new WebClient())
             {
                 try

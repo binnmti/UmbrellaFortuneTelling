@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Weather
 {
@@ -6,9 +7,10 @@ namespace Weather
     {
         string Url { get; }
 
-        bool GetUmbrella(DateTime day);
+        UmbrellaData GetUmbrella(DateTime day);
 
         WeatherReportData ReportData { get; }
+        List<WeatherData> TodayWeatherData();
 
         WeatherReportData Update(string place);
 
