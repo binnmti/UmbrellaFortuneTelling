@@ -36,7 +36,7 @@ namespace OpenWeatherMap
             }
             return string.Empty;
         }
-        private static int GetCulture(string locale) => Convert.ToInt32("0x" + locale, 16);
 
+        private static int GetCulture(string locale) => Convert.ToInt32("0x" + locale, 16);
     }
 }

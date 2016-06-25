@@ -15,23 +15,19 @@ namespace OpenWeatherMap
         private const string AppId = "3d9a8eaf26eb211844ea28e7535c8894";
         public WeatherReportData ReportData { get; } = new WeatherReportData();
 
-        public string Url { get; }
         public UmbrellaData GetUmbrella(DateTime day)
         {
-            var days = TodayWeatherData();
+            var days = TodayWeatherData().ToList();
             var data = new UmbrellaData
             {
                 Is = days.Any(x => x.Weather.Contains("RAIN")),
-                Percent = (int) ((float) days.Count(x => x.Weather.Contains("RAIN"))/days.Count*100)
+                Percent = (int)((float)days.Count(x => x.Weather.Contains("RAIN")) / days.Count * 100)
             };
             return data;
         }
 
-        public List<WeatherData> TodayWeatherData()
-        {
-            return ReportData.WeatherDatas.Where(x => x.Date >= DateTime.Now && x.Date <= DateTime.Now.AddDays(1)).ToList();
-        }
-
+        public IEnumerable<WeatherData> TodayWeatherData() => ReportData.WeatherDatas
+            .Where(x => x.Date >= DateTime.Now && x.Date <= DateTime.Now.AddDays(1)).ToList();
 
         public WeatherReportData Update(string place)
         {
@@ -44,6 +40,7 @@ namespace OpenWeatherMap
                 {
                     using (var st = wc.OpenRead(accessUrl))
                     {
+                        if (st == null) return null;
                         using (var sr = new StreamReader(st))
                         {
                             var html = sr.ReadToEnd();

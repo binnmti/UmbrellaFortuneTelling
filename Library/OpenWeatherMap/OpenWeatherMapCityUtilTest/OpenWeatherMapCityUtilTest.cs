@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenWeatherMap;
 
@@ -9,7 +8,7 @@ namespace OpenWeatherMapCityUtilTest
     public class OpenWeatherMapCityUtilTest
     {
         [TestMethod]
-        public void 現在のOSの国取得()
+        public void 現在のosの国()
         {
             OpenWeatherMapCityUtil.GetCurrentCountry().Is("JP");
         }

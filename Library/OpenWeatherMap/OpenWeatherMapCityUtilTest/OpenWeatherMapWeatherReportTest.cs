@@ -38,7 +38,7 @@ namespace OpenWeatherMapCityUtilTest
         public void 雨取得()
         {
             _weatherReport = new OpenWeatherMapWeatherReport();
-            var data = _weatherReport.Update("kyoto");
+            _weatherReport.Update("kyoto");
             var umbrealla = _weatherReport.GetUmbrella(DateTime.Now);
 
         }
