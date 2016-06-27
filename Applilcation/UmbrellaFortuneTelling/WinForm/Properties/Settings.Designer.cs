@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UmbrellaFortuneTelling.Properties
+namespace WinForm.Properties
 {
 
 

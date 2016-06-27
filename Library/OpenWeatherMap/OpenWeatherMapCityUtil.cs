@@ -5,17 +5,17 @@ using System.IO;
 using System.Linq;
 using Codeplex.Data;
 using OpenWeatherMap.Inside;
+using OpenWeatherMap.Properties;
 
 namespace OpenWeatherMap
 {
     public static class OpenWeatherMapCityUtil
     {
-        private const string JsonFileName = "city.list.json";
-
+        //ToDo 名前としてはjpよりJapanとかにして変換の方がやりたい
         public static IEnumerable<string> GetCountrys() => OpenWeatherMapCountry.Names;
 
-        public static IEnumerable<string> GetCitys(string country) => File.ReadLines(JsonFileName)
-            .Where(l => l.Contains($"\"country\":\"{country}\""))
+        public static IEnumerable<string> GetCitys(string country) => Resources.city_list.Split('\n')
+            .Where(l => l.Contains($"\"country\":\"{country}\""))   //ToDo 高速化だけど美しくない
             .Select(line => (OpenWeatherMapJson.City)DynamicJson.Parse(line))
             .Select(json => json.name)
             .OrderBy(x => x);

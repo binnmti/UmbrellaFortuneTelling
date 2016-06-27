@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenWeatherMap;
 
@@ -41,13 +36,13 @@ namespace UmbrellaFortuneTelling
             listView1.Items.Clear();
             foreach (var data in report.TodayWeatherData())
             {
-                var item = listView1.Items.Add(data.Date.ToString());
+                var item = listView1.Items.Add(data.Date.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(data.Weather);
             }
             listView1.EndUpdate();
             var um = report.GetUmbrella(DateTime.Now);
             label3.Text = um.Is ? "傘" : "×";
-            labelRainPercent.Text = um.Percent + "%";
+            labelRainPercent.Text = um.Percent + @"%";
         }
     }
 }

@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<style type="text/css">
+<!--
+body {
+  text-align: center;
+}
+-->
+</style>
+<img src="~/Content/Umbrella.png">
+@using (Html.BeginForm("Fortune", "Home"))
+{
+    @Html.DropDownList("City", (IEnumerable<SelectListItem>)ViewBag.Citys)
+    <input type="submit" name="Fortune" value="検索" class="btn" placeholder="Select city" />
+}

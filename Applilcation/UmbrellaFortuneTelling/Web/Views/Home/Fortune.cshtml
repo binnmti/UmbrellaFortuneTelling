@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Weather.WeatherData>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<style type="text/css">
+    <!--
+    body {
+        margin: 30px;
+        text-align: center;
+    }
+    -->
+</style>
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    @if (ViewBag.Umbrella)
+    {
+        <img src="~/Content/need.png">
+        <p>photo by <a href="https://www.flickr.com/photos/jackal1203/14801855910/">David Photo Studio</a></p>
+    }
+    else
+    {
+        <img src="~/Content/Fine.jpg"><br>
+        <p>photo by <a href="https://www.flickr.com/photos/80592618@N06/15329072067/in/set-72157648275468900/">Greg Tsai</a></p>
+    }
+    <p>Umbrella Fortune Telling</p>
+    <h3> @ViewBag.Percent </h3>
+</div>
+<div class="col-md-2">
+    <table class="table table-sm table-striped">
+        @foreach (var item in Model)
+        {
+            if (@item.Weather.ToUpper().Contains("RAIN"))
+            {
+                <tr class="info">
+                    <td>
+                        @item.Date
+                        <img src=@item.Icon>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr class="warning">
+                    <td>
+                        @item.Date
+                        <img src=@item.Icon>
+                    </td>
+                </tr>
+            }
+
+        }
+    </table>
+</div>
+
