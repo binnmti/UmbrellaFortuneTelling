@@ -62,7 +62,8 @@ namespace Web.Controllers
             ViewBag.Percent = um.Percent + @"%";
 
             var r = new Random();
-            var picture = PictureDatas[r.Next(PictureDatas.Count)];
+            var h = r.Next(100);
+            var picture = PictureDatas[h % PictureDatas.Count];
             ViewBag.FileName = picture.FileName;
             ViewBag.Link = picture.Link;
             ViewBag.Author = picture.Auther;
