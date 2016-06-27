@@ -15,8 +15,8 @@
 <div class="col-md-8">
     @if (ViewBag.Umbrella)
     {
-        <img src="~/Content/need.png">
-        <p>photo by <a href="https://www.flickr.com/photos/jackal1203/14801855910/">David Photo Studio</a></p>
+        <img src="~/Content/@ViewBag.FileName"><br>
+        <p>photo by <a href="@ViewBag.Link">@ViewBag.Author</a></p>
     }
     else
     {
