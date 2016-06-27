@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenWeatherMap;
@@ -42,5 +43,6 @@ namespace OpenWeatherMapCityUtilTest
             var umbrealla = _weatherReport.GetUmbrella(DateTime.Now);
 
         }
+
     }
 }

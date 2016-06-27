@@ -2,11 +2,10 @@
 @{
     ViewBag.Title = "Home Page";
 }
-
 <style type="text/css">
     <!--
     body {
-        margin: 30px;
+        margin: 15px;
         text-align: center;
     }
     -->
@@ -24,6 +23,7 @@
         <img src="~/Content/Fine.jpg"><br>
         <p>photo by <a href="https://www.flickr.com/photos/80592618@N06/15329072067/in/set-72157648275468900/">Greg Tsai</a></p>
     }
+    <h2>@ViewBag.City</h2>
     <p>Umbrella Fortune Telling</p>
     <h3> @ViewBag.Percent </h3>
 </div>
@@ -31,25 +31,13 @@
     <table class="table table-sm table-striped">
         @foreach (var item in Model)
         {
-            if (@item.Weather.ToUpper().Contains("RAIN"))
-            {
-                <tr class="info">
-                    <td>
-                        @item.Date
-                        <img src=@item.Icon>
-                    </td>
-                </tr>
-            }
-            else
-            {
-                <tr class="warning">
-                    <td>
-                        @item.Date
-                        <img src=@item.Icon>
-                    </td>
-                </tr>
-            }
-
+            var className = item.Weather.ToUpper().Contains("RAIN") ? "info" : "warning";
+            <tr class=@className>
+                <td>
+                    @item.Date.ToString("g")
+                    <img src=@item.Icon>
+                </td>
+            </tr>
         }
     </table>
 </div>

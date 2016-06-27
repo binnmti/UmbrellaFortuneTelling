@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using Codeplex.Data;
 using OpenWeatherMap.Inside;
 using Weather;
+using System.Configuration;
 
 namespace OpenWeatherMap
 {
@@ -13,14 +15,13 @@ namespace OpenWeatherMap
     {
         private const string OpenWeatherMapUrl = "http://api.openweathermap.org/data/2.5/forecast";
         private const string OpenWeatherMapIconUrl = "http://openweathermap.org/img/w/{0}.png";
-        private const string AppId = "3d9a8eaf26eb211844ea28e7535c8894";
         public WeatherReportData ReportData { get; } = new WeatherReportData();
 
         public UmbrellaData GetUmbrella(DateTime day)
         {
             var days = TodayWeatherData().ToList();
             var fortune = Fortune();
-            var percent = (int) ((float) days.Count(x => x.Weather.Contains("RAIN"))/days.Count*100);
+            var percent = (int)((float)days.Count(x => x.Weather.Contains("RAIN")) / days.Count * 100);
             var reverse = IsReverse(percent);
             if (percent > 50)
             {
@@ -40,39 +41,6 @@ namespace OpenWeatherMap
             return data;
         }
 
-        /// <summary>
-        /// 占い
-        /// </summary>
-        /// <returns>高い数ほど低い確率で0 - 50を返す。</returns>
-        int Fortune()
-        {
-            for (int i = 0; i < 50; i++)
-            {
-                var r = new Random();
-                var randomNumber = r.Next(100 - i);
-                if (randomNumber <= i)
-                {
-                    return i;
-                }
-            }
-            return 50;
-        }
-        /// <summary>
-        /// 反転する
-        /// 50に近いほど反転しやすく100 or 0に近い場合は反転し辛い
-        /// </summary>
-        /// <param name="percent"></param>
-        /// <returns></returns>
-        bool IsReverse(int percent)
-        {
-            //反転するかどうか
-            var r = new Random();
-            var randomNumber = r.Next(100);
-            var baseNumber = Math.Abs((percent - 50) * 2);
-            //マイナスなら反転
-            return (baseNumber - randomNumber < 0);
-        }
-
         public string GetIconUrl(string icon) => string.Format(OpenWeatherMapIconUrl, icon);
 
         public IEnumerable<WeatherData> TodayWeatherData() => ReportData.WeatherDatas
@@ -82,7 +50,8 @@ namespace OpenWeatherMap
         {
             if (string.IsNullOrEmpty(place)) return null;
 
-            var accessUrl = $"{OpenWeatherMapUrl}?q={place}&appid={AppId}";
+            var appSettings = ConfigurationManager.AppSettings;
+            var accessUrl = $"{OpenWeatherMapUrl}?q={place}&appid={appSettings["OpenWeatherMapApp"]}";
             using (var wc = new WebClient())
             {
                 try
@@ -111,6 +80,43 @@ namespace OpenWeatherMap
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// 占い
+        /// </summary>
+        /// <returns>基本は高い数ほど低い確率で0 - 50を返す。たまに100</returns>
+        private int Fortune()
+        {
+            var luck = new Random().Next(100);
+            if (luck == 7) return 100;
+            for (var i = 0; i < 50; i++)
+            {
+                Thread.Sleep(1);    //Seedをずらす
+                var r = new Random();
+                var randomNumber = r.Next(100 - i);
+                if (randomNumber <= i)
+                {
+                    return i;
+                }
+            }
+            return 50;
+        }
+
+        /// <summary>
+        /// 反転する
+        /// 50に近いほど反転しやすく100 or 0に近い場合は反転し辛い
+        /// </summary>
+        /// <param name="percent"></param>
+        /// <returns></returns>
+        private bool IsReverse(int percent)
+        {
+            //反転するかどうか
+            var r = new Random();
+            var randomNumber = r.Next(101);
+            var baseNumber = Math.Abs((percent - 50) * 2);
+            //マイナスなら反転
+            return baseNumber - randomNumber < 0;
         }
     }
 }

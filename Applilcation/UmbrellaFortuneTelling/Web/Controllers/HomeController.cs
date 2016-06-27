@@ -15,7 +15,8 @@ namespace Web.Controllers
         {
             var city = GetCookieValueByKey("City");
 
-            var current = OpenWeatherMapCityUtil.GetCurrentCountry();
+            //ToDo 国際化は後回し
+            var current = "JP"; //OpenWeatherMapCityUtil.GetCurrentCountry();
             ViewBag.Citys = OpenWeatherMapCityUtil.GetCitys(current).Select(citys => new SelectListItem
             {
                 Value = citys,
@@ -35,6 +36,7 @@ namespace Web.Controllers
             report.Update(data.City);
             var model = report.TodayWeatherData();
             var um = report.GetUmbrella(DateTime.Now);
+            ViewBag.Umbrella = um.Is;
             ViewBag.Umbrella = um.Is;
             ViewBag.Percent = um.Percent + @"%";
             return View(model);
