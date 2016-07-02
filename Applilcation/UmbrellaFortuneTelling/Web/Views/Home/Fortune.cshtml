@@ -16,16 +16,18 @@
     @if (ViewBag.Umbrella)
     {
         <img src="~/Content/@ViewBag.FileName" class="img-responsive center-block"><br>
-        <p>photo by <a href="@ViewBag.Link">@ViewBag.Author</a></p>
+        <p>photo by <a href="@ViewBag.Quotation">@ViewBag.Author</a></p>
     }
     else
     {
         <img src="~/Content/Fine.jpg" class="img-responsive center-block"><br>
         <p>photo by <a href="https://www.flickr.com/photos/80592618@N06/15329072067/in/set-72157648275468900/">Greg Tsai</a></p>
     }
-    <h2>@ViewBag.City</h2>
-    <p>Umbrella Fortune Telling</p>
-    <h3> @ViewBag.Percent </h3>
+    <h3>@ViewBag.City の傘確率</h3>
+    <h1>@ViewBag.Percent </h1>
+    <p>@ViewBag.Result</p>
+    <br>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://umbrellafortunetelling.azurewebsites.net/" data-text="傘占い：@ViewBag.City の傘確率は @ViewBag.Percent (@ViewBag.Result)" data-size="large" data-hashtags="umbrellafortunetelling">Tweet</a>
 </div>
 <div class="col-md-2">
     <table class="table table-sm table-striped">
@@ -41,4 +43,6 @@
         }
     </table>
 </div>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 

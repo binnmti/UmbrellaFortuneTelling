@@ -311,6 +311,10 @@
       <Project>{70453ff8-262f-47e5-983d-7a0d858c7784}</Project>
       <Name>OpenWeatherMap</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Library\WeatherLady\WeatherLady.csproj">
+      <Project>{3cee14ae-3c90-4be5-a6e8-d15e8bb00e45}</Project>
+      <Name>WeatherLady</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Library\Weather\Weather.csproj">
       <Project>{54d519ae-3e97-4155-89c4-1b1a4f6341fb}</Project>
       <Name>Weather</Name>

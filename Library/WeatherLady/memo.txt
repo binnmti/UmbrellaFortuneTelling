@@ -6,6 +6,12 @@ http://cc-library.net/010007107_free-photo/
 http://cc-library.net/010000964_free-photo/
 http://cc-library.net/010009882_free-photo/
 
+<td class="table02">gregt99</td>
+
+photo by <a href="%url%" target="_blank">%text%</a>
+
+
+
 http://01.gatag.net/0002851-free-photo/
 http://01.gatag.net/0008011-free-photo/
 http://01.gatag.net/0013219-free-photo/
@@ -14,3 +20,8 @@ http://01.gatag.net/0012570-free-photo/
 http://01.gatag.net/0012569-free-photo/
 
 http://free-photos.gatag.net/2014/06/27/190000.html
+
+
+Need8
+gregt99
+https://www.flickr.com/photos/80592618@N06/16241574209/in/set-72157650614225875/

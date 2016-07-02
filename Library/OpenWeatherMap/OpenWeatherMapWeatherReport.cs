@@ -35,7 +35,7 @@ namespace OpenWeatherMap
             percent = Math.Min(percent, 100);
             var data = new UmbrellaData
             {
-                Is = percent != 0,
+                Is = percent >= 50,
                 Percent = percent
             };
             return data;
