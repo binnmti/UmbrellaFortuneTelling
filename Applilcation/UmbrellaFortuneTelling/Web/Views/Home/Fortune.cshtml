@@ -15,12 +15,12 @@
 <div class="col-md-8">
     @if (ViewBag.Umbrella)
     {
-        <img src="~/Content/@ViewBag.FileName"><br>
+        <img src="~/Content/@ViewBag.FileName" class="img-responsive center-block"><br>
         <p>photo by <a href="@ViewBag.Link">@ViewBag.Author</a></p>
     }
     else
     {
-        <img src="~/Content/Fine.jpg"><br>
+        <img src="~/Content/Fine.jpg" class="img-responsive center-block"><br>
         <p>photo by <a href="https://www.flickr.com/photos/80592618@N06/15329072067/in/set-72157648275468900/">Greg Tsai</a></p>
     }
     <h2>@ViewBag.City</h2>
