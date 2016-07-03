@@ -88,6 +88,7 @@ namespace OpenWeatherMap
         /// <returns>基本は高い数ほど低い確率で0 - 50を返す。たまに100</returns>
         private int Fortune()
         {
+            //ToDo 乱数を内包しているのもどうだろうか？
             var luck = new Random().Next(100);
             if (luck == 7) return 100;
             for (var i = 0; i < 50; i++)
