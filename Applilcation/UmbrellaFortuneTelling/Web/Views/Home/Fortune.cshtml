@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Weather.WeatherData>
+﻿@model IEnumerable<KeyValuePair<DateTime, Weather.WeatherData2>>
 @{
     ViewBag.Title = "Home Page";
 }
@@ -16,33 +16,67 @@
     @if (ViewBag.Umbrella)
     {
         <img src="~/Content/@ViewBag.FileName" class="img-responsive center-block"><br>
-        <p>photo by <a href="@ViewBag.Quotation">@ViewBag.Author</a></p>
+        <p>
+            photo by <a href="@ViewBag.Quotation">@ViewBag.Author</a>
+        </p>
     }
     else
     {
         <img src="~/Content/Fine.jpg" class="img-responsive center-block"><br>
-        <p>photo by <a href="https://www.flickr.com/photos/80592618@N06/15329072067/in/set-72157648275468900/">Greg Tsai</a></p>
+        <p>
+            photo by <a href="https://www.flickr.com/photos/80592618@N06/15329072067/in/set-72157648275468900/">Greg Tsai</a>
+        </p>
     }
     <h3>@ViewBag.City の傘確率</h3>
     <h1>@ViewBag.Percent </h1>
     <p>@ViewBag.Result</p>
     <br>
+    @if (ViewBag.CitySplitCount <= 3)
+    {
+        using (Html.BeginForm("Fortune", "Home", FormMethod.Get))
+        {
+            @Html.DropDownList("City", (IEnumerable<SelectListItem>)ViewBag.Citys)
+            <br><br>
+            <button type="submit" class="btn btn-default btn-lg">
+                <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>占い
+            </button>
+            <br><br>
+        }
+    }
     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://umbrellafortunetelling.azurewebsites.net/" data-text="傘占い：@ViewBag.City の傘確率は @ViewBag.Percent (@ViewBag.Result)" data-size="large" data-hashtags="umbrellafortunetelling">Tweet</a>
 </div>
+
+
 <div class="col-md-2">
-    <table class="table table-sm table-striped">
+    <table class="table table-sm table-striped table-condensed">
+        <tr class="small">
+            @for (var i = 0; i < ViewBag.CitySplitCount; i++)
+            {
+                <th class="text-center">
+                    @ViewBag.CitySplit[i]
+                </th>
+            }
+        </tr>
         @foreach (var item in Model)
         {
-            var className = item.Weather.ToUpper().Contains("RAIN") ? "info" : "warning";
-            <tr class=@className>
-                <td>
-                    @item.Date.ToString("g")
-                    <img src=@item.Icon>
+            var allClassName = item.Value.Weather.Any(x => x.ToUpper().Contains("RAIN")) ? "info" : "warning";
+            <tr class="small">
+                <td colspan=@item.Value.Weather.Count class=@allClassName>
+                    @item.Key.ToString("g")
                 </td>
+            </tr>
+            <tr class="small">
+                @for (var i = 0; i < item.Value.Weather.Count; i++)
+                {
+                    var className = item.Value.Weather[i].ToUpper().Contains("RAIN") ? "info" : "warning";
+                    <td class=@className>
+                        <img src=@item.Value.Icon[i]>
+                    </td>
+                }
             </tr>
         }
     </table>
+
 </div>
 
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
+<script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>

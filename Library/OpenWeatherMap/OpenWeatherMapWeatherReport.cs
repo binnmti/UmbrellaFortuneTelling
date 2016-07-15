@@ -8,6 +8,7 @@ using Codeplex.Data;
 using OpenWeatherMap.Inside;
 using Weather;
 using System.Configuration;
+using System.Net.Http;
 
 namespace OpenWeatherMap
 {
@@ -15,13 +16,18 @@ namespace OpenWeatherMap
     {
         private const string OpenWeatherMapUrl = "http://api.openweathermap.org/data/2.5/forecast";
         private const string OpenWeatherMapIconUrl = "http://openweathermap.org/img/w/{0}.png";
-        public WeatherReportData ReportData { get; } = new WeatherReportData();
+        public List<WeatherReportData> ReportData { get; } = new List<WeatherReportData>();
+
+
+
+        public Dictionary<DateTime, WeatherData2> FotuneDatas { get; } = new Dictionary<DateTime, WeatherData2>();
+
 
         public UmbrellaData GetUmbrella(DateTime day)
         {
-            var days = TodayWeatherData().ToList();
+            var days = TodayWeatherData2().ToList();
             var fortune = Fortune();
-            var percent = (int)((float)days.Count(x => x.Weather.Contains("RAIN")) / days.Count * 100);
+            var percent = (int)((float)days.Count(x => x.Value.Weather.Contains("RAIN")) / days.Count * 100);
             var reverse = IsReverse(percent);
             if (percent > 50)
             {
@@ -43,42 +49,49 @@ namespace OpenWeatherMap
 
         public string GetIconUrl(string icon) => string.Format(OpenWeatherMapIconUrl, icon);
 
-        public IEnumerable<WeatherData> TodayWeatherData() => ReportData.WeatherDatas
-            .Where(x => x.Date >= DateTime.Now && x.Date <= DateTime.Now.AddDays(1)).ToList();
+        //public IEnumerable<WeatherData> TodayWeatherData() => ReportData.WeatherDatas
+        //    .OrderBy(x => x.Date)
+        //    .Where(x => x.Date >= DateTime.Now && x.Date <= DateTime.Now.AddDays(1)).ToList();
 
-        public WeatherReportData Update(string place)
+        public IEnumerable<KeyValuePair<DateTime, WeatherData2>> TodayWeatherData2() => FotuneDatas;
+
+        public void Update(string place)
         {
-            if (string.IsNullOrEmpty(place)) return null;
+            if (string.IsNullOrEmpty(place)) return;
 
             var appSettings = ConfigurationManager.AppSettings;
-            var accessUrl = $"{OpenWeatherMapUrl}?q={place}&appid={appSettings["OpenWeatherMapApp"]}";
-            using (var wc = new WebClient())
+            foreach (var p in place.Split('+'))
             {
-                try
+                using (var wc = new HttpClient())
                 {
-                    using (var st = wc.OpenRead(accessUrl))
+                    var accessUrl = $"{OpenWeatherMapUrl}?q={p}&appid={appSettings["OpenWeatherMapApp"]}";
+                    using (var st = wc.GetStreamAsync(accessUrl))
                     {
-                        if (st == null) return null;
-                        using (var sr = new StreamReader(st))
+                        var json = (OpenWeatherMapJson.Rootobject)DynamicJson.Parse(st.Result);
+                        var data = new WeatherReportData()
                         {
-                            var html = sr.ReadToEnd();
-                            var json = (OpenWeatherMapJson.Rootobject)DynamicJson.Parse(html);
-
-                            ReportData.City = json.city.name;
-                            ReportData.Country = json.city.country;
-                            ReportData.WeatherDatas.AddRange(json.list
-                                .Select(x => new WeatherData(DateTime.Parse(x.dt_txt),
+                            City = json.city.name,
+                            Country = json.city.country,
+                        };
+                        data.WeatherDatas.AddRange(json.list
+                            .Select(x => new WeatherData(DateTime.Parse(x.dt_txt),
                                 x.weather.ElementAt(0).description.ToUpper(),
                                 GetIconUrl(x.weather.ElementAt(0).icon))));
-                            return ReportData;
-                        }
+                        ReportData.Add(data);
                     }
                 }
-                //存在しないURLなど
-                catch (WebException)
+            }
+            //同じdateの場合、addするような処理
+            var fortuneDatas = ReportData[0].WeatherDatas.Where(x => x.Date >= DateTime.Now && x.Date <= DateTime.Now.AddDays(1));
+            for (int i = 0; i < fortuneDatas.Count(); i++)
+            {
+                var data = new WeatherData2();
+                for (var j = 0; j < ReportData.Count; j++)
                 {
-                    return null;
+                    data.Weather.Add(ReportData[j].WeatherDatas[i].Weather);
+                    data.Icon.Add(ReportData[j].WeatherDatas[i].Icon);
                 }
+                FotuneDatas.Add(fortuneDatas.ElementAt(i).Date, data);
             }
         }
 

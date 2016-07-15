@@ -7,10 +7,11 @@ namespace Weather
     {
         UmbrellaData GetUmbrella(DateTime day);
 
-        WeatherReportData ReportData { get; }
+        List<WeatherReportData> ReportData { get; }
 
-        IEnumerable<WeatherData> TodayWeatherData();
+        //IEnumerable<WeatherData> TodayWeatherData();
+        IEnumerable<KeyValuePair<DateTime, WeatherData2>> TodayWeatherData2();
 
-        WeatherReportData Update(string place);
+        void Update(string place);
     }
 }

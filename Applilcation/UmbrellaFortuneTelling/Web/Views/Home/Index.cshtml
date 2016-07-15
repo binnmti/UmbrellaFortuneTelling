@@ -9,8 +9,11 @@ body {
 -->
 </style>
 <img src="~/Content/Umbrella.png">
-@using (Html.BeginForm("Fortune", "Home"))
+@using (Html.BeginForm("Fortune", "Home", FormMethod.Get))
 {
     @Html.DropDownList("City", (IEnumerable<SelectListItem>)ViewBag.Citys)
-    <input type="submit" name="Fortune" value="検索" class="btn" placeholder="Select city" />
+    <br><br>
+    <button type="submit" class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>占い
+    </button>
 }

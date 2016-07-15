@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using OpenWeatherMap;
-using Weather;
 using WeatherLady;
 
 namespace Web.Controllers
@@ -15,34 +11,49 @@ namespace Web.Controllers
     {
         public ActionResult Index()
         {
-            var city = GetCookieValueByKey("City");
-
-            //ToDo 国際化は後回し
-            var current = "JP"; //OpenWeatherMapCityUtil.GetCurrentCountry();
-            ViewBag.Citys = OpenWeatherMapCityUtil.GetCitys(current).Select(citys => new SelectListItem
-            {
-                Value = citys,
-                Text = citys,
-                Selected = citys == city
-            });
+            CreateCitySelect(string.Empty);
             return View();
         }
 
-        public ActionResult Fortune(string value, WeatherReportData data)
+        private void CreateCitySelect(string getCity)
         {
-            if (data.City == null)
+            //ToDo 国際化は後回し
+            const string current = "JP"; //OpenWeatherMapCityUtil.GetCurrentCountry();
+            var citys = OpenWeatherMapCityUtil.GetCitys(current).Distinct();
+            //kyoto+kyotoをはじく
+            foreach (var city in getCity.Split('+'))
+            {
+                citys = citys.Where(c => c != city);
+            }
+            var cookieCity = GetCookieValueByKey("City");
+            ViewBag.Citys = citys.Select(c => new SelectListItem
+            {
+                Value = getCity == string.Empty ? c : $"{c}+{getCity}",
+                Text = getCity == string.Empty ? c : $"{c}+{getCity}",
+                Selected = c == cookieCity
+            });
+        }
+
+        public ActionResult Fortune()
+        {
+            var getCity = Request.QueryString["city"];
+            if (string.IsNullOrEmpty(getCity))
             {
                 return RedirectToAction("Index");
             }
-            SetCookie("City", data.City);
+            CreateCitySelect(getCity);
+            //クッキーは最初に入れたやつだけ
+            SetCookie("City", getCity.Split('+')[getCity.Split('+').Length - 1]);
+
             var report = new OpenWeatherMapWeatherReport();
-            report.Update(data.City);
-            var model = report.TodayWeatherData();
+            report.Update(getCity);
             var um = report.GetUmbrella(DateTime.Now);
             ViewBag.Umbrella = um.Is;
             ViewBag.Result = um.Is ? "いる?" : "いらない?";
             ViewBag.Percent = um.Percent + @"%";
-            ViewBag.City = data.City;
+            ViewBag.City = getCity;
+            ViewBag.CitySplit = getCity.Split('+');
+            ViewBag.CitySplitCount = getCity.Split('+').Length;
 
             var r = new Random();
             var h = r.Next(100);
@@ -50,22 +61,12 @@ namespace Web.Controllers
             ViewBag.FileName = picture.FileName;
             ViewBag.Author = picture.Author;
             ViewBag.Quotation = picture.Quotation;
+            var model = report.TodayWeatherData2();
             return View(model);
         }
 
-        /// <summary>
-        /// キーから、リクエストのクッキーを取得します
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         private string GetCookieValueByKey(string key) => Request.Cookies[key]?.Value;
 
-        /// <summary>
-        /// レスポンスにクッキーを設定します
-        /// </summary>
-        /// <param name="key">キー</param>
-        /// <param name="value">値</param>
-        /// <returns></returns>
         private void SetCookie(string key, string value)
         {
             var cookie = new HttpCookie(key)
