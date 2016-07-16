@@ -15,6 +15,12 @@ namespace Web.Controllers
             return View();
         }
 
+        public ActionResult About()
+        {
+            ViewBag.Message = "傘占いとは";
+            return View();
+        }
+
         private void CreateCitySelect(string getCity)
         {
             //ToDo 国際化は後回し

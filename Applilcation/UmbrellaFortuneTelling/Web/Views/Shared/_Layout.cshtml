@@ -30,6 +30,12 @@
                 </button>
                 @Html.ActionLink("傘占い", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("ホーム", "Index", "Home")</li>
+                    <li>@Html.ActionLink("詳細", "About", "Home")</li>
+                </ul>
+            </div>
         </div>
     </div>
     <div class="container body-content">

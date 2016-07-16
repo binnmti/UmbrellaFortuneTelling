@@ -90,6 +90,7 @@ namespace OpenWeatherMap
         {
             var rainPercent = GetRainPercent();
             var fortunePercent = GetFortunePercent();
+
             var reverse = IsFortuneReverse(rainPercent);
             if (rainPercent > 50)
             {
@@ -143,17 +144,17 @@ namespace OpenWeatherMap
         /// <summary>
         /// 反転占い
         /// 50に近いほど反転しやすく100 or 0に近い場合は反転し辛い
+        /// 100 1% 75 25% 50 50% 25 25% 0 1%
         /// </summary>
         /// <param name="rainPercent">雨確率</param>
         /// <returns></returns>
         private bool IsFortuneReverse(int rainPercent)
         {
             //反転するかどうか
+            var baseNumber = Math.Abs(rainPercent - 50);
             var r = new Random();
-            var randomNumber = r.Next(101);
-            var baseNumber = Math.Abs((rainPercent - 50) * 2);
-            //マイナスなら反転
-            return baseNumber - randomNumber < 0;
+            var randomNumber = r.Next(baseNumber);
+            return randomNumber <= 1;
         }
     }
 

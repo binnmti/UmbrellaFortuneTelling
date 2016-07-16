@@ -16,25 +16,26 @@ namespace OpenWeatherMapCityUtilTest
         public void 無効場所()
         {
             _weatherReport = new OpenWeatherMapWeatherReport();
-            var data = _weatherReport.Update("Kato");
-            data.City.IsNot("Kato");
+            _weatherReport.Update("Kato");
+            _weatherReport.WeatherReportDatas[0].City.IsNot("Kato");
         }
         [TestMethod]
         public void 有効場所()
         {
             _weatherReport = new OpenWeatherMapWeatherReport();
-            var data = _weatherReport.Update("Kyoto");
-            data.Country.Is("JP");
-            data.City.Is("Kyoto");
+            _weatherReport.Update("Kyoto");
+            _weatherReport.WeatherReportDatas[0].City.Is("Kyoto");
         }
         [TestMethod]
         public void 日づけ取得()
         {
             _weatherReport = new OpenWeatherMapWeatherReport();
-            var data = _weatherReport.Update("kyoto");
-            var hit = data.WeatherDatas.FirstOrDefault(x => x.Date.ToLongDateString() == DateTime.Now.ToLongDateString());
+            _weatherReport.Update("Kyoto");
+            var hit = _weatherReport.WeatherReportDatas
+                .FirstOrDefault(x => x.WeatherDatas.ElementAt(0).Date.ToLongDateString() == DateTime.Now.ToLongDateString());
             hit.IsNotNull();
         }
+
         [TestMethod]
         public void 雨取得()
         {
@@ -42,6 +43,14 @@ namespace OpenWeatherMapCityUtilTest
             _weatherReport.Update("kyoto");
             var umbrealla = _weatherReport.GetUmbrella(DateTime.Now);
 
+        }
+
+        [TestMethod]
+        public void IsFortuneReverse()
+        {
+            var w = new OpenWeatherMapWeatherReport();
+            //_weatherReport.Update("kyoto");
+            w.AsDynamic().IsFortuneReverse(0);
         }
 
     }
