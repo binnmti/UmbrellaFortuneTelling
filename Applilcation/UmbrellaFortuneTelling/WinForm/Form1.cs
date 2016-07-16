@@ -34,7 +34,7 @@ namespace UmbrellaFortuneTelling
             report.Update(comboBox2.Text);
             listView1.BeginUpdate();
             listView1.Items.Clear();
-            foreach (var data in report.TodayWeatherData2())
+            foreach (var data in report.TodayWeatherDatas())
             {
                 var item = listView1.Items.Add(data.Key.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(data.Value.Weather[0]);

@@ -45,6 +45,7 @@ namespace Web.Controllers
             //クッキーは最初に入れたやつだけ
             SetCookie("City", getCity.Split('+')[getCity.Split('+').Length - 1]);
 
+            //ToDo ViewBag変数にも整理が必要
             var report = new OpenWeatherMapWeatherReport();
             report.Update(getCity);
             var um = report.GetUmbrella(DateTime.Now);
@@ -61,7 +62,7 @@ namespace Web.Controllers
             ViewBag.FileName = picture.FileName;
             ViewBag.Author = picture.Author;
             ViewBag.Quotation = picture.Quotation;
-            var model = report.TodayWeatherData2();
+            var model = report.TodayWeatherDatas();
             return View(model);
         }
 
