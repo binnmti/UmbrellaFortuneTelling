@@ -120,25 +120,21 @@ namespace OpenWeatherMap
         /// </summary>
         /// <returns>
         /// 基本は高い数ほど低い確率
-        /// 0 - 10 90% 11 - 20 70% 21 - 30 50% (100 1%)
+        /// 例）0 - 10:40% 11 - 20:30% 21 - 30:20% 31 - 40:8% 41 - 50 2%
         /// </returns>
         private int GetFortunePercent()
         {
-            //ToDo テストを作るべきだな
-            //ToDo 乱数を内包しているのもどうだろうか？
             var luck = new Random().Next(100);
             if (luck == 7) return 100;
-            for (var i = 0; i < 50; i++)
+
+            var sum = 1;
+            var nums = new List<int>();
+            for (int i = 0; i <= 50; i++)
             {
-                Thread.Sleep(1);    //Seedをずらす
-                var r = new Random();
-                var randomNumber = r.Next(100 - i);
-                if (randomNumber <= i)
-                {
-                    return i;
-                }
+                nums.Insert(0, sum);
+                if (i % 5 == 0) sum *= 2;
             }
-            return 50;
+            return RandomUtil.GetRandomIndex(nums.ToArray());
         }
 
         /// <summary>
@@ -160,6 +156,17 @@ namespace OpenWeatherMap
 
     public static class DateTimeExtention
     {
-        public static bool Within24Hours(this DateTime date) => date >= DateTime.Now && date < DateTime.Now.AddDays(1);
+        /// <summary>
+        /// 24時間以内かどうか
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static bool Within24Hours(this DateTime date)
+        {
+            //DateTime.NowがAzureだと正常に動かない
+            var myTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+            var currentDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Now.ToUniversalTime(), myTimeZone);
+            return date >= currentDateTime && date < currentDateTime.AddDays(1);
+        }
     }
 }
