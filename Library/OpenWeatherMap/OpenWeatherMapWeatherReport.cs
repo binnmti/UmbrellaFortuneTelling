@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using Codeplex.Data;
 using OpenWeatherMap.Inside;
 using Weather;
@@ -14,11 +13,11 @@ namespace OpenWeatherMap
     {
         private const string OpenWeatherMapUrl = "http://api.openweathermap.org/data/2.5/forecast";
         private const string OpenWeatherMapIconUrl = "http://openweathermap.org/img/w/{0}.png";
-        private Dictionary<DateTime, TodayWeatherDatas> FotuneDecisionDatas { get; } = new Dictionary<DateTime, TodayWeatherDatas>();
+        private Dictionary<DateTime, Within24HoursWeatherDatas> FotuneDecisionDatas { get; } = new Dictionary<DateTime, Within24HoursWeatherDatas>();
 
         public List<WeatherReportData> WeatherReportDatas { get; } = new List<WeatherReportData>();
 
-        public IEnumerable<KeyValuePair<DateTime, TodayWeatherDatas>> TodayWeatherDatas() => FotuneDecisionDatas;
+        public IEnumerable<KeyValuePair<DateTime, Within24HoursWeatherDatas>> TodayWeatherDatas() => FotuneDecisionDatas;
 
         public UmbrellaData GetUmbrella(DateTime day)
         {
@@ -45,7 +44,7 @@ namespace OpenWeatherMap
             var todayData = GetFirstPlaceTodayData();
             for (var i = 0; i < todayData.Count; i++)
             {
-                var fotuneData = new TodayWeatherDatas();
+                var fotuneData = new Within24HoursWeatherDatas();
                 //最初のWeatherDataの時間に、全場所の天気を入れる
                 foreach (var data in WeatherReportDatas)
                 {
@@ -151,22 +150,6 @@ namespace OpenWeatherMap
             var r = new Random();
             var randomNumber = r.Next(baseNumber);
             return randomNumber <= 1;
-        }
-    }
-
-    public static class DateTimeExtention
-    {
-        /// <summary>
-        /// 24時間以内かどうか
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static bool Within24Hours(this DateTime date)
-        {
-            //DateTime.NowがAzureだと正常に動かない
-            var myTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
-            var currentDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Now.ToUniversalTime(), myTimeZone);
-            return date >= currentDateTime && date < currentDateTime.AddDays(1);
         }
     }
 }

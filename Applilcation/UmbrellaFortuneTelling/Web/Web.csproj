@@ -214,6 +214,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Fine.jpg" />
+    <Content Include="Content\Is.jpg" />
     <Content Include="Content\Need.png" />
     <Content Include="Content\Need2.png" />
     <Content Include="Content\Need3.png" />
@@ -221,6 +222,7 @@
     <Content Include="Content\Need5.png" />
     <Content Include="Content\Need6.png" />
     <Content Include="Content\Need7.png" />
+    <Content Include="Content\top.jpg" />
     <Content Include="Content\Umbrella.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

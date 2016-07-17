@@ -81,7 +81,7 @@
   <ItemGroup>
     <Compile Include="IWeatherReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TodayWeatherDatas.cs" />
+    <Compile Include="Within24HoursWeatherDatas.cs" />
     <Compile Include="UmbrellaData.cs" />
     <Compile Include="WeatherData.cs" />
     <Compile Include="WeatherReportData.cs" />

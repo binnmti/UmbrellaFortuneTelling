@@ -32,6 +32,12 @@ namespace Web.Controllers
                 citys = citys.Where(c => c != city);
             }
             var cookieCity = GetCookieValueByKey("City");
+            //Topページは
+            if (getCity == string.Empty)
+            {
+                //複数cityを1つに
+                cookieCity = cookieCity.Split('+')[cookieCity.Split('+').Length - 1];
+            }
             ViewBag.Citys = citys.Select(c => new SelectListItem
             {
                 Value = getCity == string.Empty ? c : $"{c}+{getCity}",
@@ -48,8 +54,7 @@ namespace Web.Controllers
                 return RedirectToAction("Index");
             }
             CreateCitySelect(getCity);
-            //クッキーは最初に入れたやつだけ
-            SetCookie("City", getCity.Split('+')[getCity.Split('+').Length - 1]);
+            SetCookie("City", getCity);
 
             //ToDo ViewBag変数にも整理が必要
             var report = new OpenWeatherMapWeatherReport();

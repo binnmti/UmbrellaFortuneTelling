@@ -9,7 +9,7 @@ namespace Weather
 
         List<WeatherReportData> WeatherReportDatas { get; }
 
-        IEnumerable<KeyValuePair<DateTime, TodayWeatherDatas>> TodayWeatherDatas();
+        IEnumerable<KeyValuePair<DateTime, Within24HoursWeatherDatas>> TodayWeatherDatas();
 
         void Update(string place);
     }
